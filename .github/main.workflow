@@ -1,15 +1,19 @@
-workflow "Basic Check" {
+workflow "Code Style" {
   on = "push"
-  resolves = ["Unit Test"]
+  resolves = ["lint-action"]
 }
 
-action "Code Style" {
+action "lint-action" {
   uses = "CyberZHG/github-action-python-lint@master"
   args = "--max-line-length=120 keras_bert tests"
 }
 
-action "Unit Test" {
+workflow "Unit Test" {
+  on = "push"
+  resolves = ["test-action"]
+}
+
+action "test-action" {
   uses = "CyberZHG/github-action-python-test@master"
   args = "--with-coverage --cover-erase --cover-html --cover-html-dir=htmlcov --cover-package=keras_bert tests"
-  needs = ["Code Style"]
 }
